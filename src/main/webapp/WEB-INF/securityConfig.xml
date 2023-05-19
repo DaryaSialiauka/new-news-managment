@@ -1,0 +1,47 @@
+<?xml version= "1.0" encoding= "UTF-8"?>
+<beans:beans
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security-5.4.xsd">
+       
+      <beans:import resource="applicationContext.xml"/>
+
+	<http auto-config="true" use-expressions="true">
+	
+
+		<intercept-url pattern="/addnews"
+			access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/editnews"
+			access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/getnews"
+			access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" />
+
+
+
+		<form-login login-page="/singin"
+			username-parameter="login" password-parameter="password" default-target-url="/news"
+			login-processing-url="/authentication"
+			authentication-failure-url="/singin?login_error=true" />
+
+		<logout logout-url="/singout" logout-success-url="/"
+			invalidate-session="true" />
+
+		<csrf disabled="true" />
+		
+		
+
+	</http>
+	
+
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider user-service-ref="userDetailsServiceImpl">
+			 <password-encoder ref="bCryptPasswordEncoder"/>
+		</authentication-provider>
+	</authentication-manager>
+
+
+</beans:beans>
